@@ -78,3 +78,25 @@ config.xml
 }
 ~~~
 
+##使用
+~~~ javascript
+    // 接收registrationID, 现在的设计有可能会因为早于JPush的cn.jpush.android.intent.REGISTRATION广播而无法获取。
+    // registrationID用来作为标示用户，可以取代setAlias，类似于APNS的token。
+    var tokenHandle = function(result){
+        if (result && result['registrationID']) {
+            alert(result['registrationID']);
+        }
+    }
+    
+    // 处理消息达到后的逻辑，扩展字段在event.extra。
+    var onNotification = function(event){
+        alert(event.alert);
+    }
+    
+    // 在onDeviceReady事件注册。
+    window.plugins.jPushPlugin.register(
+        tokenHandle,
+        onNotification
+    );
+~~~
+

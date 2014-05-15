@@ -38,6 +38,10 @@
                         catch(exception){console.log(exception);}
 
                 })
+                
+                window.plugins.jPushPlugin.registerCallback(function(e){
+                        alert(e.alert);
+                });
             }
             document.addEventListener("deviceready", onDeviceReady, false)
         </script>

@@ -39,9 +39,16 @@
 
                 })
                 
-                window.plugins.jPushPlugin.registerCallback(function(e){
-                        alert(e.alert);
-                });
+                window.plugins.jPushPlugin.register(
+                            function(result){
+                                if (result && result['registrationID']) {
+                                    alert(result['registrationID']);
+                                }
+                            },
+                            function(event){
+                                alert(event);
+                            }
+                );
             }
             document.addEventListener("deviceready", onDeviceReady, false)
         </script>

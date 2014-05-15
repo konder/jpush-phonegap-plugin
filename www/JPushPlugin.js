@@ -48,16 +48,18 @@ JPushPlugin.prototype.setAlias = function (data) {
             alert(exception);
          }
 }
+JPushPlugin.prototype.registerCallback = function (fn) {
+    JPushPlugin.prototype.callback = fn;
+}
 JPushPlugin.prototype.pushCallback = function (data) {
          try{
-            var bToObj=JSON.parse(data);
-            var code  = bToObj.resultCode;
-            var tags  = bToObj.resultTags;
-            var alias = bToObj.resultAlias;
-            console.log("JPushPlugin:callBack--code is "+code+" tags is "+tags + " alias is "+alias);
+             var title = data['extras']['cn.jpush.android.NOTIFICATION_CONTENT_TITLE'];
+             var alert = data['extras']['cn.jpush.android.ALERT'];
+             var extra = data['extras']['cn.jpush.android.EXTRA'];
+             JPushPlugin.prototype.callback({title: title, alert: alert, extra: extra});
          }
          catch(exception){
-            alert(exception);
+            console.log("callback:" + exception);
          }
 }
 if(!window.plugins) {

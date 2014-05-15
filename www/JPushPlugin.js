@@ -33,7 +33,7 @@ JPushPlugin.prototype.setTags = function (data) {
             this.call_native("setTags", [data]);
          }
          catch(exception){
-            alert(exception);
+            console.log(exception);
          }
 }
 JPushPlugin.prototype.setAlias = function (data) {
@@ -44,19 +44,29 @@ JPushPlugin.prototype.setAlias = function (data) {
             this.call_native("setAlias", [data]);
          }
          catch(exception){
-             
-            alert(exception);
+            console.log("alias:" + exception);
          }
 }
-JPushPlugin.prototype.registerCallback = function (fn) {
-    JPushPlugin.prototype.callback = fn;
+JPushPlugin.prototype.register = function (registrationIDHandler, onNotificationHandler) {
+    JPushPlugin.prototype.onNotificationHandler = onNotificationHandler;
+
+    try {
+        cordova.exec(registrationIDHandler,
+            null,
+            'JPushPlugin',
+            'getRegistrationID',
+            ['']);
+    }catch(exception){
+        console.log("register:" + exception);
+    }
 }
 JPushPlugin.prototype.pushCallback = function (data) {
+
          try{
              var title = data['extras']['cn.jpush.android.NOTIFICATION_CONTENT_TITLE'];
              var alert = data['extras']['cn.jpush.android.ALERT'];
              var extra = data['extras']['cn.jpush.android.EXTRA'];
-             JPushPlugin.prototype.callback({title: title, alert: alert, extra: extra});
+             JPushPlugin.prototype.onNotificationHandler({title: title, alert: alert, extra: extra});
          }
          catch(exception){
             console.log("callback:" + exception);

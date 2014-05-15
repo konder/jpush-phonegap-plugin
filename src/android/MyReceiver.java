@@ -19,7 +19,9 @@ public class MyReceiver extends BroadcastReceiver {
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
         	
         }else if (JPushInterface.ACTION_UNREGISTER.equals(intent.getAction())){
-        	
+      	
+        } else if (intent.getAction().equals("cn.jpush.android.intent.NOTIFICATION_RECEIVED")){
+            	handlingReceivedMessage(intent);
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
         	handlingReceivedMessage(intent);
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
@@ -37,7 +39,7 @@ public class MyReceiver extends BroadcastReceiver {
 		String msg = intent.getStringExtra(JPushInterface.EXTRA_MESSAGE);
 		Map<String,String> extras = getNotificationExtras(intent);
 		
-		JPushPlugin.transmitPush(msg, extras);
+		//JPushPlugin.transmitPush(msg, extras);
 	}
 	 private void handlingNotificationOpen(Context context,Intent intent){
 		 String alert = intent.getStringExtra(JPushInterface.EXTRA_ALERT);
@@ -51,6 +53,8 @@ public class MyReceiver extends BroadcastReceiver {
 		 JPushPlugin.notificationExtras = extras;
 		 
 		 context.startActivity(launch);
+		 
+		 JPushPlugin.transmitPush(msg, extras);
 	 }
 	 private Map<String, String> getNotificationExtras(Intent intent) {
 		 Map<String, String> extrasMap = new HashMap<String, String>();
@@ -64,5 +68,5 @@ public class MyReceiver extends BroadcastReceiver {
 		 return extrasMap;
 	 }
 	 private static final List<String> IGNORED_EXTRAS_KEYS = 
-			 Arrays.asList("cn.jpush.android.TITLE","cn.jpush.android.MESSAGE","cn.jpush.android.APPKEY");
+			 Arrays.asList("cn.jpush.android.NOTIFICATION_ID", "cn.jpush.android.PUSH_ID", "cn.jpush.android.MSG_ID", "cn.jpush.android.TITLE","cn.jpush.android.MESSAGE","cn.jpush.android.APPKEY");
 }

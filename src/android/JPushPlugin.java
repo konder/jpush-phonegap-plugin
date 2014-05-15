@@ -27,6 +27,7 @@ public class JPushPlugin extends CordovaPlugin {
 					"setTagAlias", 
 					"setAlias", 
 					"getNotification",
+                    "getRegistrationID",
 					"setBasicPushNotificationBuilder",
 					"setCustomPushNotificationBuilder",
 					"setPushTime",
@@ -251,6 +252,16 @@ public class JPushPlugin extends CordovaPlugin {
 		JPushPlugin.notificationExtras = new HashMap<String, String>();
 	}
 
+    void getRegistrationID(JSONArray data, CallbackContext callBackContext){
+        JSONObject jsonData = new JSONObject();
+        try{
+            jsonData.put("registrationID", JPushPlugin.registrationID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        callBackContext.success( jsonData );
+    }
+
 	void setBasicPushNotificationBuilder(JSONArray data,
 			CallbackContext callbackContext) {
 		BasicPushNotificationBuilder builder = new BasicPushNotificationBuilder(
@@ -266,7 +277,6 @@ public class JPushPlugin extends CordovaPlugin {
 		callbackContext.success(obj);
 	}
 
-	/*
 	void setCustomPushNotificationBuilder(JSONArray data,
 			CallbackContext callbackContext) {
 		CustomPushNotificationBuilder builder = new CustomPushNotificationBuilder(
@@ -283,7 +293,6 @@ public class JPushPlugin extends CordovaPlugin {
 		}
 		callbackContext.success(obj);
 	}
-	*/
 	void clearAllNotification(JSONArray data,
 			CallbackContext callbackContext){
 		JPushInterface.clearAllNotifications(this.cordova.getActivity());

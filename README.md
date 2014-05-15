@@ -13,7 +13,8 @@ cordova plugin add https://github.comg/konder/jpush-phonegap-plugin.git
 ##修改配置
 
 ###Android
-config.xml
+
+修改config.xml，覆盖从极光控制台获取的AAPKEY和CHANNEL参数。
 
 ~~~ xml
 <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
@@ -21,24 +22,40 @@ config.xml
 ~~~
 
 
-MainActivity
+修改"MainActivity.java"，在onCreate的时候执行初始化，Handle在Resume和Pause时的逻辑。
 
 ~~~ java
-    @Override
-    protected void onResume() {
-        super.onResume();
-        JPushInterface.onResume(this);
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        JPushInterface.onPause(this);
-    }
+@Override
+public void onCreate(Bundle savedInstanceState)
+{
+    super.onCreate(savedInstanceState);
+
+    //release时关闭
+    JPushInterface.setDebugMode(true);
+    JPushInterface.init(this);
+
+    super.init();
+    // Set by <content src="index.html" /> in config.xml
+    super.loadUrl(Config.getStartUrl());
+    //super.loadUrl("file:///android_asset/www/index.html");
+}
+
+@Override
+protected void onResume() {
+    super.onResume();
+    JPushInterface.onResume(this);
+}
+
+@Override
+protected void onPause() {
+    super.onPause();
+    JPushInterface.onPause(this);
+}
 ~~~
 
 ###IOS
 
-config.xml
+修改config.xml，启用JPushPlgin。
 
 ~~~ xml
 <feature name="JPushPlugin">
@@ -48,6 +65,7 @@ config.xml
 ~~~
 
 
+修改代理类，执行初始化和处理didRegisterForRemoteNotificationsWithDeviceToken事件与didReceiveRemoteNotification的逻辑。
 ~~~ c
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -79,6 +97,8 @@ config.xml
 ~~~
 
 ##使用
+
+
 ~~~ javascript
     // 接收registrationID, 现在的设计有可能会因为早于JPush的cn.jpush.android.intent.REGISTRATION广播而无法获取。
     // registrationID用来作为标示用户，可以取代setAlias，类似于APNS的token。

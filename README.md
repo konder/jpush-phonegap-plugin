@@ -1,3 +1,7 @@
+#JPush Phonegap Plugin
+
+修正官方源的bug和陆续实现一些功能。
+
 
 ##安装
 

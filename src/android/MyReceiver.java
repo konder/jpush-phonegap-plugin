@@ -17,11 +17,11 @@ public class MyReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
-        	
-        }else if (JPushInterface.ACTION_UNREGISTER.equals(intent.getAction())){
-      	
+            handlingRegistrationID(intent);
+        }else if (JPushInterface.ACTION_UNREGISTER.equals(intent.getAction())) {
+
         } else if (intent.getAction().equals("cn.jpush.android.intent.NOTIFICATION_RECEIVED")){
-            	handlingReceivedMessage(intent);
+            handlingReceivedMessage(intent);
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
         	handlingReceivedMessage(intent);
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
@@ -35,34 +35,41 @@ public class MyReceiver extends BroadcastReceiver {
         }
 	
 	}
-	private void handlingReceivedMessage(Intent intent) {
+
+    private void handlingRegistrationID(Intent intent){
+        JPushPlugin.registrationID = intent.getStringExtra(JPushInterface.EXTRA_REGISTRATION_ID);
+    }
+
+    private void handlingReceivedMessage(Intent intent) {
 		String msg = intent.getStringExtra(JPushInterface.EXTRA_MESSAGE);
 		Map<String,String> extras = getNotificationExtras(intent);
-		
+
 		//JPushPlugin.transmitPush(msg, extras);
 	}
+
 	 private void handlingNotificationOpen(Context context,Intent intent){
 		 String alert = intent.getStringExtra(JPushInterface.EXTRA_ALERT);
-		 Map<String,String> extras = getNotificationExtras(intent);
-		 
+         Map<String,String> extras = getNotificationExtras(intent);
+
 		 Intent launch = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
 		 launch.addCategory(Intent.CATEGORY_LAUNCHER);
 		 launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		 
 		 JPushPlugin.notificationAlert = alert;
 		 JPushPlugin.notificationExtras = extras;
-		 
+
 		 context.startActivity(launch);
-		 
-		 JPushPlugin.transmitPush(msg, extras);
+
+         JPushPlugin.transmitPush(alert, extras);
 	 }
+
 	 private Map<String, String> getNotificationExtras(Intent intent) {
 		 Map<String, String> extrasMap = new HashMap<String, String>();
-		 
+
 		 for (String key : intent.getExtras().keySet()) {
 			 if (!IGNORED_EXTRAS_KEYS.contains(key)) {
 				 Log.e("key","key:"+key);
-				 extrasMap.put(key, intent.getStringExtra(key));
+                 extrasMap.put(key, intent.getStringExtra(key));
 			 }
 		 }
 		 return extrasMap;

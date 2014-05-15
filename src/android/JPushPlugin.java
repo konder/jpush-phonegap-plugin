@@ -41,6 +41,7 @@ public class JPushPlugin extends CordovaPlugin {
 	private ExecutorService threadPool = Executors.newFixedThreadPool(1);
 	private static JPushPlugin instance;
 
+    public static String registrationID;
 	public static String notificationAlert;
 	public static Map<String, String> notificationExtras;
 
@@ -68,19 +69,22 @@ public class JPushPlugin extends CordovaPlugin {
 	}
 
 	static void transmitPush(String message, Map<String, String> extras) {
-		if (instance == null) {
+        if (instance == null) {
 			return;
 		}
+
 		JSONObject data = notificationObject(message, extras);
+
 		String js = String
 				.format("window.plugins.jPushPlugin.pushCallback(%s);",
 						data.toString());
+
 		try {
 			instance.webView.sendJavascript(js);
 		} catch (NullPointerException e) {
-
+            e.printStackTrace();
 		} catch (Exception e) {
-
+            e.printStackTrace();
 		}
 	}
 
@@ -235,10 +239,10 @@ public class JPushPlugin extends CordovaPlugin {
 	}
 
 	void getNotification(JSONArray data, CallbackContext callBackContext) {
-		String alert = JPushPlugin.notificationAlert;
-		Map<String, String> extras = JPushPlugin.notificationExtras;
+        String alert = JPushPlugin.notificationAlert;
+        Map<String, String> extras = JPushPlugin.notificationExtras;
 
-		JSONObject jsonData = new JSONObject();
+        JSONObject jsonData = new JSONObject();
 		try {
 			jsonData.put("message", alert);
 			jsonData.put("extras", new JSONObject(extras));
@@ -276,7 +280,7 @@ public class JPushPlugin extends CordovaPlugin {
 		}
 		callbackContext.success(obj);
 	}
-
+/*
 	void setCustomPushNotificationBuilder(JSONArray data,
 			CallbackContext callbackContext) {
 		CustomPushNotificationBuilder builder = new CustomPushNotificationBuilder(
@@ -293,6 +297,7 @@ public class JPushPlugin extends CordovaPlugin {
 		}
 		callbackContext.success(obj);
 	}
+	*/
 	void clearAllNotification(JSONArray data,
 			CallbackContext callbackContext){
 		JPushInterface.clearAllNotifications(this.cordova.getActivity());

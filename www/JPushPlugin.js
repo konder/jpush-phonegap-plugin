@@ -48,16 +48,15 @@ JPushPlugin.prototype.setAlias = function (data) {
          }
 }
 JPushPlugin.prototype.register = function (registrationIDHandler, onNotificationHandler) {
+    JPushPlugin.prototype.registrationIDHandler = registrationIDHandler;
     JPushPlugin.prototype.onNotificationHandler = onNotificationHandler;
-
-    try {
-        cordova.exec(registrationIDHandler,
-            null,
-            'JPushPlugin',
-            'getRegistrationID',
-            ['']);
-    }catch(exception){
-        console.log("register:" + exception);
+}
+JPushPlugin.prototype.registerCallback = function (data) {
+    try{
+        JPushPlugin.prototype.registrationIDHandler(data);
+    }
+    catch(exception){
+        console.log("callback:" + exception);
     }
 }
 JPushPlugin.prototype.pushCallback = function (data) {
